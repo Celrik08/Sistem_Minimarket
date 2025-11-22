@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk, Menu
 from Data_Produk import muat_produk
 from Login_User import login_user
+from Register_User import register_user
 from Tambah_Produk import tambah_produk
 from Ubah_Produk import ubah_produk
 from Hapus_Produk import hapus_produk
@@ -57,7 +58,7 @@ class Aplikasi:
         btn_login = ttk.Button(frm, text="Login", command=self.Login)
         btn_login.grid(row=4, column=0, pady=15)
 
-        btn_register = ttk.Button(frm, text="Register")
+        btn_register = ttk.Button(frm, text="Register", command=self.buka_form_register)
         btn_register.grid(row=4, column=1, pady=15)
 
         btn_register = ttk.Button(frm, text="Logout", command=self.Logout)
@@ -83,11 +84,53 @@ class Aplikasi:
             self.Menu_Admin()
         else:
             messagebox.showinfo("Sukses", "Selamat Datang User")
+
+    # Register Meilonie
+    def buka_form_register(self):
+        self.bersihkan_root()
+
+        frm = ttk.Frame(self.root, padding=20)
+        frm.pack(expand=True)
+
+        ttk.Label(frm, text="Form Register", font=("Arial", 16)).grid(row=0, column=0, columnspan=2, pady=10)
+
+        ttk.Label(frm, text="Username:").grid(row=1, column=0, sticky="e", padx=5, pady=5)
+        self.reg_username = ttk.Entry(frm)
+        self.reg_username.grid(row=1, column=1, pady=5)
+        self.reg_username.bind("<Return>", lambda e: self.reg_password.focus())
+
+        ttk.Label(frm, text="Password:").grid(row=2, column=0, sticky="e", padx=5, pady=5)
+        self.reg_password = ttk.Entry(frm)
+        self.reg_password.grid(row=2, column=1, pady=5)
+        self.reg_password.bind("<Return>", lambda e: self.proses_register())
+
+        ttk.Button(frm, text="Register", command=self.proses_register).grid(row=3, column=0, pady=15)
+
+        ttk.Button(frm, text="Back", command=self.buat_tampilan_login).grid(row=3, column=1, pady=15)
+
+    def proses_register(self):
+        username = self.reg_username.get().strip()
+        password = self.reg_password.get().strip()
+
+        if not username or not password:
+            tk.messagebox.showerror("Error", "Username dan password tidak boleh kosong!")
+            return
+
+        hasil = register_user(username, password)
+
+        if hasil is None:
+            tk.messagebox.showerror("Error", "Username sudah digunakan!")
+            self.reg_username.delete(0, tk.END)
+            return
+
+        tk.messagebox.showinfo("Sukses", "Username dan password telah tersimpan!")
+
+        self.buat_tampilan_login()
     
     def Logout(self): 
         python = sys.executable
         os.execl(python, python, *sys.argv)
-
+        
     # Fajar Menu Admin
     def Menu_Admin(self):
         self.bersihkan_root()
