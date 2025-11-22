@@ -88,7 +88,7 @@ class Aplikasi:
         if user["role"] == "admin":
             self.Menu_Admin()
         else:
-            messagebox.showinfo("Sukses", "Selamat Datang User")
+            self.tampilkan_menu_user()
 
     # Register Meilonie
     def buka_form_register(self):
@@ -135,6 +135,7 @@ class Aplikasi:
     def Logout(self): 
         python = sys.executable
         os.execl(python, python, *sys.argv)
+        
     # Fajar Menu Admin
     def Menu_Admin(self):
         self.bersihkan_root()
@@ -279,6 +280,33 @@ class Aplikasi:
         self.entry_total_laporan.config(state="readonly")
 
         ttk.Button(frm, text="Back", command=self.Menu_Admin).pack(pady=10)
+
+    # Sabrina Menu User
+    def tampilkan_menu_user(self):
+        self.bersihkan_root()
+        menubar = Menu(self.root)
+
+        menu_beli = Menu(menubar, tearoff=0)
+        menu_beli.add_command(label="Beli")
+        menubar.add_cascade(label="Beli Produk", menu=menu_beli)
+
+        menubar.add_command(label="Back", command=self.buat_tampilan_login)
+        self.root.config(menu=menubar)
+
+        kontainer = ttk.Frame(self.root, padding=10)
+        kontainer.pack(fill="both", expand=True)
+        ttk.Label(kontainer, text=f"Welcome User: {self.user_saat_ini['username']}", font=("Arial", 12)).pack(pady=5)
+
+        self.tree = ttk.Treeview(kontainer, columns=("ID","Nama","Harga","Stok"), show="headings", height=15)
+        for col in ("ID","Nama","Harga","Stok"):
+            self.tree.heading(col, text=col)
+            if col == "Nama":
+                self.tree.column(col, width=300)
+            else:
+                self.tree.column(col, width=120, anchor="center")
+        self.tree.pack(pady=10, fill="x")
+
+        self.refresh_tree()
 
     def refresh_tree(self):
 

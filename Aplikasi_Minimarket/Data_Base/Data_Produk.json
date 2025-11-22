@@ -2,16 +2,16 @@
     "1": {
         "nama": "Sabun Lifeboy",
         "harga": 5000,
-        "stok": 20
+        "stok": 50
     },
     "2": {
         "nama": "Shampo Sunslik",
         "harga": 10000,
-        "stok": 15
+        "stok": 50
     },
     "3": {
         "nama": "Minyak Goreng",
         "harga": 14000,
-        "stok": 10
+        "stok": 50
     }
 }
