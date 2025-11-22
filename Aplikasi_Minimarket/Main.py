@@ -2,6 +2,7 @@ import os
 import sys
 import tkinter as tk
 from tkinter import ttk, Menu
+from Data_Produk import muat_produk
 from tkinter import messagebox
 from Login_User import login_user
 
@@ -75,13 +76,52 @@ class Aplikasi:
             return
         self.user_saat_ini = user
         if user["role"] == "admin":
-            messagebox.showinfo("Sukses", "Selamat Datang Admin")
+            self.Menu_Admin()
         else:
             messagebox.showinfo("Sukses", "Selamat Datang User")
     
     def Logout(self): 
         python = sys.executable
         os.execl(python, python, *sys.argv)
+    
+    # Fajar Menu Admin
+    def Menu_Admin(self):
+        self.bersihkan_root()
+        menubar = Menu(self.root)
+        menu_data = Menu(menubar, tearoff=0)
+        menu_data.add_command(label="Data Produk")
+        menubar.add_cascade(label="Produk", menu=menu_data)
+        menu_data1 = Menu(menubar, tearoff=0)
+        menu_data1.add_command(label="Data Penjualan")
+        menubar.add_cascade(label="Laporan Penjualan", menu=menu_data1)
+        menubar.add_command(label="Back", command=self.buat_tampilan_login)
+        self.root.config(menu=menubar)
+
+        kontainer = ttk.Frame(self.root, padding=10)
+        kontainer.pack(fill="both", expand=True)
+        ttk.Label(kontainer, text=f"Welcome Admin: {self.user_saat_ini['username']}", font=("Arial", 12)).pack(pady=5)
+
+        self.tree = ttk.Treeview(kontainer, columns=("ID","Nama","Harga","Stok"), show="headings", height=15)
+        for col in ("ID","Nama","Harga","Stok"):
+            self.tree.heading(col, text=col)
+            if col == "Nama":
+                self.tree.column(col, width=300)
+            else:
+                self.tree.column(col, width=120, anchor="center")
+        self.tree.pack(pady=10, fill="x")
+
+        self.refresh_tree()
+
+    def refresh_tree(self):
+
+        try:
+            for row in self.tree.get_children():
+                self.tree.delete(row)
+            produk = muat_produk()
+            for idp, data in produk.items():
+                self.tree.insert("", "end", values=(idp, data["nama"], f"Rp{data['harga']}", data["stok"]))
+        except:
+            pass
 
 if __name__ == "__main__":
     root = tk.Tk()
