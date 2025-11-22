@@ -3,6 +3,12 @@ import sys
 import tkinter as tk
 from tkinter import ttk, Menu
 from Data_Produk import muat_produk
+from Login_User import login_user
+from Tambah_Produk import tambah_produk
+from Ubah_Produk import ubah_produk
+from Hapus_Produk import hapus_produk
+from Riwayat_Penjualan import muat_riwayat
+from tkinter import messagebox
 from Tambah_Produk import tambah_produk
 from Ubah_Produk import ubah_produk
 from Hapus_Produk import hapus_produk
@@ -86,7 +92,6 @@ class Aplikasi:
     def Logout(self): 
         python = sys.executable
         os.execl(python, python, *sys.argv)
-    
     # Fajar Menu Admin
     def Menu_Admin(self):
         self.bersihkan_root()
@@ -95,7 +100,7 @@ class Aplikasi:
         menu_data.add_command(label="Data Produk", command=self.Menu_Data_Produk)
         menubar.add_cascade(label="Produk", menu=menu_data)
         menu_data1 = Menu(menubar, tearoff=0)
-        menu_data1.add_command(label="Data Penjualan")
+        menu_data1.add_command(label="Data Penjualan", command=self.Menu_Laporan_Penjualan)
         menubar.add_cascade(label="Laporan Penjualan", menu=menu_data1)
         menubar.add_command(label="Back", command=self.buat_tampilan_login)
         self.root.config(menu=menubar)
@@ -194,6 +199,43 @@ class Aplikasi:
     def hapus_produk_gui(self):
         hapus_produk(self.root, self.entry_id, self.entry_nama, self.entry_harga, self.entry_stok)
         self.refresh_tree_produk()
+    
+    # Meilonie Riwayat_Penjualan
+    def Menu_Laporan_Penjualan(self):
+        self.bersihkan_root()
+
+        frm = ttk.Frame(self.root, padding=10)
+        frm.pack(fill="both", expand=True)
+
+        ttk.Label(frm, text="Laporan Penjualan", font=("Arial", 16)).pack(pady=10)
+
+        tree = ttk.Treeview(frm, columns=("ID", "Total"), show="headings", height=12)
+        tree.column("ID", width=150, anchor="center")
+        tree.column("Total", width=200, anchor="center")
+
+        tree.heading("ID", text="ID Transaksi")
+        tree.heading("Total", text="Total Penjualan")
+
+        tree.pack(pady=10, fill="x")
+
+        riwayat = muat_riwayat()
+
+        total_semua = 0
+
+        for idp, data in riwayat.items():
+            nilai = data["total_penjualan"]
+            total_semua += nilai
+            tree.insert("", "end", values=(idp, nilai))
+
+        ttk.Label(frm, text="Total Semua Penjualan:").pack(pady=(10, 2))
+
+        self.entry_total_laporan = ttk.Entry(frm, justify="center")
+        self.entry_total_laporan.pack(pady=5)
+
+        self.entry_total_laporan.insert(0, str(total_semua))
+        self.entry_total_laporan.config(state="readonly")
+
+        ttk.Button(frm, text="Back", command=self.Menu_Admin).pack(pady=10)
 
     def refresh_tree(self):
 
