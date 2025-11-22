@@ -9,6 +9,12 @@ from Tambah_Produk import tambah_produk
 from Ubah_Produk import ubah_produk
 from Hapus_Produk import hapus_produk
 from Riwayat_Penjualan import muat_riwayat
+from tkinter import messagebox
+from Tambah_Produk import tambah_produk
+from Ubah_Produk import ubah_produk
+from Hapus_Produk import hapus_produk
+from tkinter import messagebox
+from Login_User import login_user
 
 # Fajar buat Class
 class Aplikasi:
@@ -129,7 +135,7 @@ class Aplikasi:
     def Logout(self): 
         python = sys.executable
         os.execl(python, python, *sys.argv)
-
+        
     # Fajar Menu Admin
     def Menu_Admin(self):
         self.bersihkan_root()
