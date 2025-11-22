@@ -8,6 +8,7 @@ from Register_User import register_user
 from Tambah_Produk import tambah_produk
 from Ubah_Produk import ubah_produk
 from Hapus_Produk import hapus_produk
+from Beli_Produk import beli_produk_gui
 from Riwayat_Penjualan import muat_riwayat
 from tkinter import messagebox
 from Tambah_Produk import tambah_produk
@@ -287,7 +288,7 @@ class Aplikasi:
         menubar = Menu(self.root)
 
         menu_beli = Menu(menubar, tearoff=0)
-        menu_beli.add_command(label="Beli")
+        menu_beli.add_command(label="Beli", command=lambda: (beli_produk_gui(self, self.root), self.refresh_tree()))
         menubar.add_cascade(label="Beli Produk", menu=menu_beli)
 
         menubar.add_command(label="Back", command=self.buat_tampilan_login)
