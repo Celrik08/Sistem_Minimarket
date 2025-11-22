@@ -3,6 +3,9 @@ import sys
 import tkinter as tk
 from tkinter import ttk, Menu
 from Data_Produk import muat_produk
+from Tambah_Produk import tambah_produk
+from Ubah_Produk import ubah_produk
+from Hapus_Produk import hapus_produk
 from tkinter import messagebox
 from Login_User import login_user
 
@@ -89,7 +92,7 @@ class Aplikasi:
         self.bersihkan_root()
         menubar = Menu(self.root)
         menu_data = Menu(menubar, tearoff=0)
-        menu_data.add_command(label="Data Produk")
+        menu_data.add_command(label="Data Produk", command=self.Menu_Data_Produk)
         menubar.add_cascade(label="Produk", menu=menu_data)
         menu_data1 = Menu(menubar, tearoff=0)
         menu_data1.add_command(label="Data Penjualan")
@@ -111,6 +114,86 @@ class Aplikasi:
         self.tree.pack(pady=10, fill="x")
 
         self.refresh_tree()
+
+    # Fajar Menu Data_Produk
+    def Menu_Data_Produk(self):
+        self.bersihkan_root()
+
+        frm = ttk.Frame(self.root, padding=10)
+        frm.pack(fill="both", expand=True)
+
+        ttk.Label(frm, text="Data Produk", font=("Arial", 16)).grid(row=0, column=0, columnspan=2, pady=10)
+
+        ttk.Label(frm, text="ID Produk:").grid(row=1, column=0, sticky="e", padx=5, pady=5)
+        self.entry_id = ttk.Entry(frm)
+        self.entry_id.grid(row=1, column=1, pady=5)
+        self.entry_id.bind("<Return>", lambda e: self.entry_nama.focus())
+
+        ttk.Label(frm, text="Nama Produk:").grid(row=2, column=0, sticky="e", padx=5, pady=5)
+        self.entry_nama = ttk.Entry(frm)
+        self.entry_nama.grid(row=2, column=1, pady=5)
+        self.entry_nama.bind("<Return>", lambda e: self.entry_harga.focus())
+
+        ttk.Label(frm, text="Harga Produk:").grid(row=3, column=0, sticky="e", padx=5, pady=5)
+        self.entry_harga = ttk.Entry(frm)
+        self.entry_harga.grid(row=3, column=1, pady=5)
+        self.entry_harga.bind("<Return>", lambda e: self.entry_stok.focus())
+
+        ttk.Label(frm, text="Stok Produk:").grid(row=4, column=0, sticky="e", padx=5, pady=5)
+        self.entry_stok = ttk.Entry(frm)
+        self.entry_stok.grid(row=4, column=1, pady=5)
+        self.entry_stok.bind("<Return>", lambda e: self.tambah_produk_gui())
+
+
+        ttk.Button(frm, text="Tambah", command=self.tambah_produk_gui).grid(row=5, column=0, pady=10)
+        ttk.Button(frm, text="Ubah", command=self.ubah_produk_gui).grid(row=5, column=1, pady=10)
+        ttk.Button(frm, text="Hapus", command=self.hapus_produk_gui).grid(row=5, column=2, pady=10)
+        ttk.Button(frm, text="Back", command=self.Menu_Admin).grid(row=5, column=3, pady=10)
+
+        self.tree_produk = ttk.Treeview(frm, columns=("ID","Nama","Harga","Stok"), show="headings", height=10)
+        for col in ("ID","Nama","Harga","Stok"):
+            self.tree_produk.heading(col, text=col)
+            if col == "Nama":
+                self.tree_produk.column(col, width=200)
+            else:
+                self.tree_produk.column(col, width=100, anchor="center")
+        self.tree_produk.grid(row=6, column=0, columnspan=4, pady=10, sticky="nsew")
+
+        self.tree_produk.bind("<<TreeviewSelect>>", self.pilih_produk)
+
+        self.refresh_tree_produk()
+
+    def refresh_tree_produk(self):
+        for row in self.tree_produk.get_children():
+            self.tree_produk.delete(row)
+        produk = muat_produk()
+        for idp, data in produk.items():
+            self.tree_produk.insert("", "end", values=(idp, data["nama"], data["harga"], data["stok"]))
+
+    def pilih_produk(self, event):
+        selected = self.tree_produk.selection()
+        if selected:
+            values = self.tree_produk.item(selected[0], "values")
+            self.entry_id.delete(0, tk.END)
+            self.entry_id.insert(0, values[0])
+            self.entry_nama.delete(0, tk.END)
+            self.entry_nama.insert(0, values[1])
+            self.entry_harga.delete(0, tk.END)
+            self.entry_harga.insert(0, values[2])
+            self.entry_stok.delete(0, tk.END)
+            self.entry_stok.insert(0, values[3])
+
+    def tambah_produk_gui(self):
+        tambah_produk(self.root, self.entry_id, self.entry_nama, self.entry_harga, self.entry_stok)
+        self.refresh_tree_produk()
+
+    def ubah_produk_gui(self):
+        ubah_produk(self.root, self.entry_id, self.entry_nama, self.entry_harga, self.entry_stok)
+        self.refresh_tree_produk()
+
+    def hapus_produk_gui(self):
+        hapus_produk(self.root, self.entry_id, self.entry_nama, self.entry_harga, self.entry_stok)
+        self.refresh_tree_produk()
 
     def refresh_tree(self):
 
