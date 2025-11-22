@@ -1,1 +1,8 @@
-{}
+{
+    "TRS01": {
+        "total_penjualan": 5000
+    },
+    "TRS02": {
+        "total_penjualan": 10000
+    }
+}
