@@ -4,7 +4,6 @@ import tkinter as tk
 from tkinter import ttk, Menu
 from Data_Produk import muat_produk
 from Login_User import login_user
-from Register_User import register_user
 from Tambah_Produk import tambah_produk
 from Ubah_Produk import ubah_produk
 from Hapus_Produk import hapus_produk
