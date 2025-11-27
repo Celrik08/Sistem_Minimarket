@@ -81,7 +81,6 @@ def beli_produk_gui(self, parent):
 
     entry_sub_total.bind("<Return>", lambda e: tambah_transaksi())
 
-    # 🌟 UBAH KOLOM TREEVIEW "Id JSON" MENJADI "Id Transaksi"
     tree = ttk.Treeview(window,
         columns=("Id Transaksi","Id Barang","Nama","Harga","Qty","Sub Total"),
         show="headings",
