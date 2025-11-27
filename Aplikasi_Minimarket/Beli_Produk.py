@@ -9,7 +9,6 @@ from Search_Barang import search_barang_gui
 
 folder_skrip = os.path.dirname(os.path.abspath(__file__))
 Data_Transaksi = os.path.join(folder_skrip, "Data_Base", "Data_Transaksi.json")
-Riwayat_Penjualan = os.path.join(folder_skrip, "Data_Base", "Riwayat_Penjualan.json")
 
 def bersihkan_root(root):
     for w in root.winfo_children():
@@ -33,8 +32,6 @@ def beli_produk_gui(self, parent):
     self.bersihkan_root()
     parent.withdraw()
     produk = muat_produk()
-    transaksi = muat_transaksi()
-    riwayat = muat_riwayat()
 
     window = tk.Toplevel(parent)
     window.title("Form Menu Transaksi")
